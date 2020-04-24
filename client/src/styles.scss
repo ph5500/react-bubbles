@@ -80,7 +80,8 @@ form {
   }
 
   input {
-    width: 100px;
+    width: 15rem;
+    height: 5rem;
   }
 }
 
@@ -95,5 +96,6 @@ form {
     color: white;
     padding: 3px 8px;
     margin-top: 16px;
+    border-radius: 15px;
   }
 }

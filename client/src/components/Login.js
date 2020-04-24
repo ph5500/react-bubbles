@@ -1,70 +1,85 @@
-import React from "react";
+import React, { useState } from "react";
 import { axiosWithAuth } from '../utils/axiosWithAuth';
 
 
 
-class Login extends React.Component {
-  state = {
-    credentials: {
-      username: '',
-      password: ''
-    }
-  };
 
-  handleChanges = e => {
-    this.setState({
-      credentials: {
-        ...this.state.credentials,
-        [e.target.name]: e.target.value
-      }
-    });
-  };
+const initialState = {
+
+  username: 'Lambda School',
+  password: 'i<3Lambd4',
+  isFetching: false
+
+}
+
+const Login = props => {
+
+  const [login, setLogin] = useState(initialState)
+
+  const handleChanges = e => {
+    setLogin({
+      ...login, [e.target.name]: e.target.value
+
+    })
+  }
 
   // make a post request to retrieve a token from the api
   // when you have handled the token, navigate to the BubblePage route
 
-  login = e => {
+  const handleLogin = e => {
     e.preventDefault();
+    setLogin({ ...login, isFetching: true });
     axiosWithAuth()
-      .post('/api/login', this.state.credentials)
-      .then(res => {
+      .post('/api/login', login)
+      .then(response => {
+        console.log("login post info", response)
         // res.data.payload
         // redux - send the token to the redux store
-        // browser storage - localStorage (this is probably the least secure choice)
-        // cookies
-        localStorage.setItem('token', JSON.stringify(res.data.payload));
-        this.props.history.push('/protected');
-      })
-      .catch(err => console.log({ err }));
-  };
+        localStorage.setItem('token', response.data.payload)
+        props.history.push('/bubble-page')
+      }).catch(err => { console.log("error in post log in", err) })
+  }
 
-  render() {
-    return (
+
+
+  return (
+    <>
       <div>
-        <form onSubmit={this.login}>
-          <input
-            type="text"
-            name="username"
-            value={this.state.credentials.username}
-            onChange={this.handleChanges}
-          />
-          <input
-            type="password"
-            name="password"
-            value={this.state.credentials.password}
-            onChange={this.handleChanges}
-          />
-          <button>Log in</button>
-
-
-
-
-        </form>
         <h1>Welcome to the Bubble App!</h1>
         <p>Build a login page here</p>
       </div>
-    );
-  };
-}
+
+
+      <div>
+        <h2>Login</h2>
+      </div>
+      <div>
+        <form onSubmit={handleLogin}>
+          <input
+            label="Username"
+            type="text"
+            name="username"
+            placeholder='username'
+            value={login.username}
+            onChange={handleChanges}
+          />
+          <input
+            label="Password"
+            type="password"
+            name="password"
+            placeholder="password"
+            value={login.password}
+            onChange={handleChanges}
+          />
+
+
+          <button>Log in</button>
+          {login.isFetching && 'Bubbles'}
+        </form>
+      </div>
+    </>
+  );
+};
+
 
 export default Login;
