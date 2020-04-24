@@ -22,7 +22,7 @@ const ColorList = ({ colors, updateColors }) => {
 
   const saveEdit = e => {
     e.preventDefault();
-    axiosWithAuth().put(`/api/colors/:id${colorToEdit.id}`, colorToEdit)
+    axiosWithAuth().put(`/api/colors/${colorToEdit.id}`, colorToEdit)
       .then(response => {
         console.log("put data", response)
         document.location.reload(true)
@@ -90,7 +90,7 @@ const ColorList = ({ colors, updateColors }) => {
             />
           </label>
           <div className="button-row">
-            <button type="submit">save</button>
+            <button type="submit">Save</button>
             <button onClick={() => setEditing(false)}>cancel</button>
           </div>
         </form>
